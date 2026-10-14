@@ -1,0 +1,925 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#060606">
+<meta name="color-scheme" content="dark">
+
+<!-- PWA -->
+<meta name="application-name" content="برنامه هفتگی">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="برنامه هفتگی">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<title>برنامه هفتگی دانشگاه</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- آیکون inline SVG (برای زمانی که فایل رو مستقیم باز می‌کنی) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%23060606'/%3E%3Crect x='24' y='24' width='144' height='144' rx='22' fill='none' stroke='%23ffffff' stroke-opacity='0.35' stroke-width='2'/%3E%3Cline x1='48' y1='80' x2='144' y2='80' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.7'/%3E%3Cline x1='48' y1='112' x2='144' y2='112' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.5'/%3E%3Cline x1='48' y1='144' x2='120' y2='144' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.3'/%3E%3Crect x='48' y='60' width='4' height='4' fill='%23ffffff'/%3E%3Crect x='48' y='92' width='4' height='4' fill='%23ffffff'/%3E%3Crect x='48' y='124' width='4' height='4' fill='%23ffffff'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%23060606'/%3E%3Crect x='24' y='24' width='144' height='144' rx='22' fill='none' stroke='%23ffffff' stroke-opacity='0.35' stroke-width='2'/%3E%3Cline x1='48' y1='80' x2='144' y2='80' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.7'/%3E%3Cline x1='48' y1='112' x2='144' y2='112' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.5'/%3E%3Cline x1='48' y1='144' x2='120' y2='144' stroke='%23ffffff' stroke-width='2' stroke-opacity='0.3'/%3E%3Crect x='48' y='60' width='4' height='4' fill='%23ffffff'/%3E%3Crect x='48' y='92' width='4' height='4' fill='%23ffffff'/%3E%3Crect x='48' y='124' width='4' height='4' fill='%23ffffff'/%3E%3C/svg%3E">
+
+<style>
+  :root {
+    --bg: #060606;
+    --bg-2: #0b0b0b;
+    --card: #0e0e0e;
+    --card-2: #131313;
+    --fg: #ececec;
+    --fg-soft: #c4c4c4;
+    --muted: #8a8a8a;
+    --dim: #5a5a5a;
+    --line: rgba(255,255,255,0.06);
+    --line-2: rgba(255,255,255,0.12);
+    --fa: 'Vazirmatn', -apple-system, 'Segoe UI', Tahoma, sans-serif;
+    --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--fa);
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding:
+      calc(20px + var(--safe-top))
+      calc(16px + var(--safe-right))
+      calc(28px + var(--safe-bottom))
+      calc(16px + var(--safe-left));
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  /* اجازه انتخاب متن فقط برای محتوای مفید */
+  .class-row, .empty-msg, .subtitle {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255,255,255,0.035), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 90% 100%, rgba(255,255,255,0.025), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: overlay;
+  }
+
+  .sheet {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line-2);
+    margin-bottom: 20px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 14px;
+    height: 1px;
+    background: var(--dim);
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 6px;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.55;
+  }
+
+  .count {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    padding: 7px 12px;
+    border: 1px solid var(--line-2);
+    border-radius: 100px;
+    margin-top: 14px;
+    text-transform: uppercase;
+  }
+  .count .live {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #fff;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%     { opacity: 0.35; transform: scale(0.7); }
+  }
+
+  .days {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .day-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .day-card:active {
+    background: var(--card-2);
+    border-color: var(--line-2);
+  }
+  .day-card::before {
+    content: "";
+    position: absolute;
+    right: 0; top: 20%; bottom: 20%;
+    width: 2px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 2px 0 0 2px;
+    transition: top 0.3s ease, bottom 0.3s ease;
+  }
+  .day-card:active::before {
+    top: 10%; bottom: 10%;
+    background: rgba(255,255,255,0.6);
+  }
+  .day-card.empty {
+    background: transparent;
+    border-style: dashed;
+    border-color: var(--line);
+  }
+  .day-card.empty::before {
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* today badge */
+  .day-card.today {
+    border-color: rgba(255,255,255,0.3);
+    background: var(--card-2);
+  }
+  .day-card.today::before {
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  }
+  .day-card.today .day-name::after {
+    content: "· TODAY";
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: #fff;
+    margin-right: 10px;
+    opacity: 0.85;
+  }
+
+  .day-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .day-card.empty .day-head { border-bottom: 0; }
+
+  .day-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+  }
+
+  .day-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+
+  .class-row {
+    padding: 14px 18px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+  .class-row + .class-row {
+    border-top: 1px solid var(--line);
+  }
+  .class-row .title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+    margin-top: 2px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .meta-item .k {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+  .meta-item .v {
+    font-size: 13.5px;
+    color: var(--fg-soft);
+    font-weight: 400;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  .meta-item .v.time {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    text-align: right;
+    color: var(--fg);
+    letter-spacing: 0.01em;
+    font-size: 13px;
+  }
+  .meta-item .v.muted {
+    color: var(--dim);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .empty-msg {
+    padding: 14px 18px 16px;
+    color: var(--dim);
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .notes {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--dim);
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+  }
+  .notes span::before {
+    content: "· ";
+    color: var(--dim);
+  }
+
+  /* ─── Install banner ─────────────────────── */
+  .install-banner {
+    position: fixed;
+    left: calc(16px + var(--safe-left));
+    right: calc(16px + var(--safe-right));
+    bottom: calc(16px + var(--safe-bottom));
+    background: var(--card-2);
+    border: 1px solid var(--line-2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    max-width: 528px;
+    margin: 0 auto;
+    animation: slideUp 0.4s ease;
+  }
+  .install-banner.show { display: flex; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .install-banner .icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .install-banner .icon svg {
+    width: 20px; height: 20px;
+    stroke: #fff;
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .install-banner .txt {
+    flex: 1;
+    min-width: 0;
+  }
+  .install-banner .txt b {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg);
+    margin-bottom: 2px;
+  }
+  .install-banner .txt span {
+    display: block;
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .install-banner .act {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .install-banner button {
+    font-family: var(--fa);
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--fg);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .install-banner button.primary {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+    font-weight: 500;
+  }
+  .install-banner button:hover {
+    background: rgba(255,255,255,0.08);
+  }
+  .install-banner button.primary:hover {
+    background: #e6e6e6;
+  }
+
+  /* ─── iOS install steps modal ────────────── */
+  .ios-modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: flex-end;
+    z-index: 200;
+    padding: 16px;
+    padding-bottom: calc(16px + var(--safe-bottom));
+  }
+  .ios-modal.show { display: flex; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .ios-modal-card {
+    background: var(--card-2);
+    border: 1px solid var(--line-2);
+    border-radius: 16px;
+    padding: 22px 20px 18px;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    animation: slideUp 0.35s ease;
+  }
+  .ios-modal-card h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--fg);
+  }
+  .ios-modal-card ol {
+    margin: 0 0 18px;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+  .ios-modal-card ol li {
+    counter-increment: step;
+    position: relative;
+    padding: 10px 40px 10px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--fg-soft);
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .ios-modal-card ol li:last-child { border-bottom: 0; }
+  .ios-modal-card ol li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    right: 0;
+    top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+  }
+  .ios-modal-card ol li b {
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .ios-modal-card button.close {
+    width: 100%;
+    font-family: var(--fa);
+    font-size: 13px;
+    padding: 12px;
+    border-radius: 100px;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--fg);
+    cursor: pointer;
+  }
+
+  /* ─── Tablet / desktop ───────────────────── */
+  @media (min-width: 720px) {
+    body {
+      padding: 40px 24px;
+    }
+    .sheet { max-width: 1000px; }
+    h1 { font-size: 26px; }
+    .days {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .day-card.empty { display: none; }
+  }
+
+  @media (max-width: 400px) {
+    body {
+      padding-left: calc(12px + var(--safe-right));
+      padding-right: calc(12px + var(--safe-left));
+    }
+    h1 { font-size: 20px; }
+    .day-head { padding: 10px 14px 10px 12px; }
+    .class-row { padding: 12px 14px 14px 12px; }
+    .class-row .title { font-size: 15px; }
+    .meta-item .v { font-size: 13px; }
+  }
+
+  /* ─── Print ──────────────────────────────── */
+  @page { size: A4 portrait; margin: 10mm; }
+  @media print {
+    body {
+      background: #fff;
+      color: #000;
+      padding: 0;
+      font-size: 12pt;
+      line-height: 1.4;
+    }
+    body::before, body::after { display: none; }
+    .sheet { max-width: none; }
+    .install-banner, .ios-modal { display: none !important; }
+    header {
+      border-bottom: 2px solid #000;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .eyebrow { color: #555; }
+    .eyebrow::before { background: #555; }
+    h1 { color: #000; font-size: 20pt; }
+    .subtitle { color: #333; font-size: 11pt; }
+    .count {
+      color: #000;
+      border-color: #666;
+      font-size: 9pt;
+      padding: 4px 10px;
+    }
+    .count .live { display: none; }
+    .days { display: block; }
+    .day-card {
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .day-card::before { background: #333; }
+    .day-card.empty {
+      background: #f5f5f5;
+      border-style: solid;
+      border-color: #ccc;
+    }
+    .day-head { border-bottom-color: #ccc; padding: 8px 12px; }
+    .day-name { color: #000; font-size: 13pt; }
+    .day-badge { color: #666; }
+    .class-row { padding: 8px 12px 10px; }
+    .class-row + .class-row { border-top-color: #ccc; }
+    .class-row .title { color: #000; font-size: 12pt; }
+    .meta-item .k { color: #666; }
+    .meta-item .v { color: #000; }
+    .meta-item .v.time { color: #000; }
+    .meta-item .v.muted { color: #888; }
+    .empty-msg { color: #777; }
+    .notes { color: #444; border-top-color: #ccc; font-size: 9pt; }
+    .day-card.today .day-name::after { color: #000; }
+  }
+</style>
+</head>
+<body>
+<main class="sheet">
+  <header>
+    <div class="eyebrow">Weekly Schedule</div>
+    <h1>برنامه هفتگی دانشگاه</h1>
+    <div class="subtitle">کلاس‌ها بر اساس روز، ساعت، استاد و مکان</div>
+    <div class="count">
+      <span class="live"></span>
+      ۶ درس · ۵ روز فعال
+    </div>
+  </header>
+
+  <div class="days" id="days">
+
+    <div class="day-card empty" data-day="6">
+      <div class="day-head">
+        <span class="day-name">شنبه</span>
+        <span class="day-badge">No Class</span>
+      </div>
+      <div class="empty-msg">کلاسی برای این روز ثبت نشده است.</div>
+    </div>
+
+    <div class="day-card" data-day="0">
+      <div class="day-head">
+        <span class="day-name">یکشنبه</span>
+        <span class="day-badge">01 Session</span>
+      </div>
+      <div class="class-row">
+        <div class="title">معماری کامپیوتر</div>
+        <div class="meta">
+          <div class="meta-item">
+            <span class="k">Time</span>
+            <span class="v time">۰۸:۰۰ – ۱۰:۳۰</span>
+          </div>
+          <div class="meta-item">
+            <span class="k">Room</span>
+            <span class="v">۳۲۳</span>
+          </div>
+          <div class="meta-item" style="grid-column: 1 / -1;">
+            <span class="k">Instructor</span>
+            <span class="v">امیر نوری</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card" data-day="1">
+      <div class="day-head">
+        <span class="day-name">دوشنبه</span>
+        <span class="day-badge">02 Sessions</span>
+      </div>
+      <div class="class-row">
+        <div class="title">طراحی الگوریتم‌ها</div>
+        <div class="meta">
+          <div class="meta-item">
+            <span class="k">Time</span>
+            <span class="v time">۰۸:۰۰ – ۱۰:۳۰</span>
+          </div>
+          <div class="meta-item">
+            <span class="k">Room</span>
+            <span class="v">۳۴۴</span>
+          </div>
+          <div class="meta-item" style="grid-column: 1 / -1;">
+            <span class="k">Instructor</span>
+            <span class="v">مهرشاد خسرویانی</span>
+          </div>
+        </div>
+      </div>
+      <div class="class-row">
+        <div class="title">زبان انگلیسی</div>
+        <div class="meta">
+          <div class="meta-item">
+            <span class="k">Time</span>
+            <span class="v time">۱۶:۱۵ – ۱۷:۰۰</span>
+          </div>
+          <div class="meta-item">
+            <span class="k">Room</span>
+            <span class="v muted">مشخص نشده</span>
+          </div>
+          <div class="meta-item" style="grid-column: 1 / -1;">
+            <span class="k">Instructor</span>
+            <span class="v">ملیحه کتابدار</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card" data-day="2">
+      <div class="day-head">
+        <span class="day-name">سه‌شنبه</span>
+        <span class="day-badge">01 Session</span>
+      </div>
+      <div class="class-row">
+        <div class="title">ورزش ۱</div>
+        <div class="meta">
+          <div class="meta-item">
+            <span class="k">Time</span>
+            <span class="v time">۱۴:۱۵ – ۱۶:۰۰</span>
+          </div>
+          <div class="meta-item">
+            <span class="k">Room</span>
+            <span class="v muted">مشخص نشده</span>
+          </div>
+          <div class="meta-item" style="grid-column: 1 / -1;">
+            <span class="k">Instructor</span>
+            <span class="v">امینه کلانی</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card" data-day="3">
+      <div class="day-head">
+        <span class="day-name">چهارشنبه</span>
+        <span class="day-badge">01 Session</span>
+      </div>
+      <div class="class-row">
+        <div class="title">نظریه زبان‌ها و ماشین‌ها</div>
+        <div class="meta">
+          <div class="meta-item">
+            <span class="k">Time</span>
+            <span class="v time">۱۰:۳۰ – ۱۲:۳۰</span>
+          </div>
+          <div class="meta-item">
+            <span class="k">Room</span>
+            <span class="v">۳۴۲</span>
+          </div>
+          <div class="meta-item" style="grid-column: 1 / -1;">
+            <span class="k">Instructor</span>
+            <span class="v">شرمین موسوی</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card empty" data-day="4">
+      <div class="day-head">
+        <span class="day-name">پنجشنبه</span>
+        <span class="day-badge">No Class</span>
+      </div>
+      <div class="empty-msg">کلاسی برای این روز ثبت نشده است.</div>
+    </div>
+
+    <div class="day-card" data-day="5">
+      <div class="day-head">
+        <span class="day-name">جمعه</span>
+        <span class="day-badge">01 Session</span>
+      </div>
+      <div class="class-row">
+        <div class="title">طراحی پایگاه داده‌ها</div>
+        <div class="meta">
+          <div class="meta-item">
+            <span class="k">Time</span>
+            <span class="v time">۰۸:۰۰ – ۱۰:۳۰</span>
+          </div>
+          <div class="meta-item">
+            <span class="k">Room</span>
+            <span class="v">۳۴۵</span>
+          </div>
+          <div class="meta-item" style="grid-column: 1 / -1;">
+            <span class="k">Instructor</span>
+            <span class="v">گودینی</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="notes">
+    <span>خانه‌های «مشخص نشده» یعنی مکان کلاس هنوز وارد نشده است.</span>
+    <span>برای نصب روی گوشی، از منوی مرورگر Add to Home Screen را بزن.</span>
+  </div>
+</main>
+
+<!-- نصب به‌عنوان اپ -->
+<div class="install-banner" id="installBanner">
+  <div class="icon">
+    <svg viewBox="0 0 24 24"><path d="M12 3v13m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+  </div>
+  <div class="txt">
+    <b>نصب به‌عنوان اپ</b>
+    <span id="installMsg">برای دسترسی سریع، روی صفحه‌ی گوشی نصبش کن.</span>
+  </div>
+  <div class="act">
+    <button class="primary" id="installBtn">نصب</button>
+    <button id="dismissBtn">بعداً</button>
+  </div>
+</div>
+
+<!-- راهنمای iOS -->
+<div class="ios-modal" id="iosModal">
+  <div class="ios-modal-card">
+    <h3>افزودن به صفحه‌ی اصلی</h3>
+    <ol>
+      <li>دکمه‌ی <b>Share</b> (مربع با فلش رو به بالا) در پایین Safari را بزن.</li>
+      <li>در منوی باز شده، <b>Add to Home Screen</b> را انتخاب کن.</li>
+      <li>بالا <b>Add</b> را بزن تا آیکون روی صفحه‌ی گوشی ظاهر شه.</li>
+    </ol>
+    <button class="close" id="closeIos">فهمیدم</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ─── Highlight today ────────────────────────── */
+  function markToday() {
+    const cards = document.querySelectorAll('.day-card');
+    const jsDay = new Date().getDay(); // 0 = Sun ... 6 = Sat
+    // map jsDay to our data-day values
+    // data-day: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    cards.forEach(c => {
+      const d = Number(c.getAttribute('data-day'));
+      c.classList.toggle('today', d === jsDay);
+    });
+  }
+  markToday();
+  // refresh at next midnight so it stays correct if user keeps it open
+  setTimeout(() => { markToday(); setInterval(markToday, 24 * 60 * 60 * 1000); },
+    (() => {
+      const now = new Date();
+      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      return tomorrow - now;
+    })()
+  );
+
+  /* ─── Install flow ───────────────────────────── */
+  const banner = document.getElementById('installBanner');
+  const installBtn = document.getElementById('installBtn');
+  const dismissBtn = document.getElementById('dismissBtn');
+  const installMsg = document.getElementById('installMsg');
+  const iosModal = document.getElementById('iosModal');
+  const closeIos = document.getElementById('closeIos');
+
+  const DISMISS_KEY = 'schedule.install.dismissed';
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isAndroid = /Android/.test(navigator.userAgent);
+
+  let deferredPrompt = null;
+
+  function showBanner() {
+    if (isStandalone) return;
+    if (localStorage.getItem(DISMISS_KEY) === '1') return;
+    banner.classList.add('show');
+  }
+
+  function hideBanner() {
+    banner.classList.remove('show');
+  }
+
+  // Android / Chrome: native install prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installMsg.textContent = 'روی صفحه‌ی گوشی نصبش کن تا سریع باز شه.';
+    installBtn.textContent = 'نصب';
+    showBanner();
+  });
+
+  // already-installed event
+  window.addEventListener('appinstalled', () => {
+    hideBanner();
+    localStorage.setItem(DISMISS_KEY, '1');
+  });
+
+  // iOS: no beforeinstallprompt — show manual instructions
+  if (isIOS && !isStandalone) {
+    installBtn.textContent = 'راهنما';
+    setTimeout(showBanner, 800);
+  }
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted' || outcome === 'dismissed') hideBanner();
+    } else if (isIOS) {
+      iosModal.classList.add('show');
+    } else {
+      // fallback for other browsers
+      installMsg.textContent = 'از منوی مرورگر گزینه‌ی «Add to Home Screen» یا «Install app» را انتخاب کن.';
+    }
+  });
+
+  dismissBtn.addEventListener('click', () => {
+    hideBanner();
+    localStorage.setItem(DISMISS_KEY, '1');
+  });
+
+  closeIos.addEventListener('click', () => iosModal.classList.remove('show'));
+  iosModal.addEventListener('click', (e) => {
+    if (e.target === iosModal) iosModal.classList.remove('show');
+  });
+
+  /* ─── Service Worker ─────────────────────────── */
+  // این بخش فقط وقتی کار می‌کنه که فایل از https یا localhost سرو بشه.
+  // اگه با file:// باز بشه، بی‌صدا نادیده گرفته می‌شه.
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    const swCode = `
+      const CACHE = 'schedule-v1';
+      self.addEventListener('install', (e) => {
+        self.skipWaiting();
+      });
+      self.addEventListener('activate', (e) => {
+        e.waitUntil(self.clients.claim());
+      });
+      self.addEventListener('fetch', (e) => {
+        const req = e.request;
+        if (req.method !== 'GET') return;
+        e.respondWith(
+          caches.open(CACHE).then((cache) =>
+            fetch(req).then((res) => {
+              if (res && res.status === 200 && res.type === 'basic') {
+                cache.put(req, res.clone());
+              }
+              return res;
+            }).catch(() => cache.match(req))
+          )
+        );
+      });
+    `;
+    try {
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(url).catch(() => {});
+    } catch (e) { /* silent */ }
+  }
+})();
+</script>
+</body>
+</html>
